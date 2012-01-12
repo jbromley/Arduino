@@ -18,7 +18,7 @@ int cols[8] = {pins[13], pins[3], pins[4], pins[10], pins[06], pins[11], pins[15
 int rows[8] = {pins[9], pins[14], pins[8], pins[12], pins[1], pins[7], pins[2], pins[5]};
 
 const byte numParticles = 8;
-Particle p[numParticles];
+Particle* p[numParticles];
 
 void setup() 
 {
@@ -44,13 +44,17 @@ void setup()
   FrequencyTimer2::setPeriod(2000);
   // Set interrupt routine to be called
   FrequencyTimer2::setOnOverflow(display);
+  
+  for (int i = 0; i < numParticles; ++i) {
+    p[i] = new Particle(random(0, 8), random(0, 8));
+  }
 }
 
 void loop() 
 {
   for (int i = 0; i < numParticles; ++i) {
-    p[i].update();
-    p[i].draw(leds);
+    p[i]->update();
+    p[i]->draw(leds);
   }
   delay(66);
 }
