@@ -11,7 +11,7 @@ void setup()
   for (int i = 0; i < 3; ++i) {
     colorComp[i] = random(0, 256);
   }
-
+  led.setColor(colorComp[0], colorComp[1], colorComp[2]);
   led.turnOn();
 }
 
