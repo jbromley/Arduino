@@ -1,5 +1,8 @@
 /*
  * Show animations on an 8x8 LED matrix.
+ *
+ * Needs FrequencyTimer2 library. See http://playground.arduino.cc/Main/DirectDriveLEDMatrix
+ * for Arduino to matrix connection details.
  */
 
 #include <FrequencyTimer2.h>
