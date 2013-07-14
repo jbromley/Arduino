@@ -4,7 +4,8 @@
  * Adapted from the Life example
  * on the Processing.org site
  *
- * Needs FrequencyTimer2 library
+ * Needs FrequencyTimer2 library. See http://playground.arduino.cc/Main/DirectDriveLEDMatrix
+ * for Arduino to matrix connection details.
  */
 
 #include <FrequencyTimer2.h>
@@ -21,19 +22,29 @@ int cols[8] = {pins[13], pins[3], pins[4], pins[10], pins[06], pins[11], pins[15
 // row[xx] of leds = pin yy on led matrix
 int rows[8] = {pins[9], pins[14], pins[8], pins[12], pins[1], pins[7], pins[2], pins[5]};
 
-#define DELAY 0
+#define DELAY 66
 #define SIZE 8
 extern byte leds[SIZE][SIZE];
 byte world[SIZE][SIZE][2];
+int generation = 0;
+int max_generations = 900;
+byte population = 0;
+byte last_population = 0;
+byte same_pop_count = 0;
+byte max_same_pop = 8;
 long density = 50;
 
 void setup() {
   setupLeds();
   randomSeed(analogRead(5));
+  population = last_population = same_pop_count = 0;
+  generation = 0;
+  density = 25 + random(50);
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
       if (random(100) < density) {
         world[i][j][0] = 1;
+        ++population;
       }
       else {
         world[i][j][0] = 0;
@@ -44,6 +55,9 @@ void setup() {
 }
 
 void loop() {
+  ++generation;
+  last_population = population;
+
   // Display current generation
   for (int i = 0; i < SIZE; i++) {
     for (int j = 0; j < SIZE; j++) {
@@ -61,10 +75,12 @@ void loop() {
       if (count == 3 && world[x][y][0] == 0) {
         // A new cell is born
         world[x][y][1] = 1; 
+        ++population;
       } 
       if ((count < 2 || count > 3) && world[x][y][0] == 1) {
         // Cell dies
         world[x][y][1] = 0; 
+        --population;
       }
     }
   }
@@ -75,6 +91,20 @@ void loop() {
       world[x][y][0] = world[x][y][1];
     }
   }
+  
+  // Check to make sure things are still changing.
+  if (population == last_population) {
+    ++same_pop_count;
+    if (same_pop_count > max_same_pop) {
+      setup();
+    }
+  } else {
+    same_pop_count = 0;
+  }
+  
+  if (generation > max_generations) {
+    setup();
+  }    
 }
 
 int neighbours(int x, int y) {
