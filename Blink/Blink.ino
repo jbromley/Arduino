@@ -4,22 +4,22 @@
  
   This example code is in the public domain.
  */
+ 
+// LED pins
+const byte RED_LED = 8;
+const byte GREEN_LED = 9;
 
-void setup() {
-  Serial.begin(9600);  
+void setup() {                
   // initialize the digital pin as an output.
-  // Pin 13 has an LED connected on most Arduino boards:
-  pinMode(12, OUTPUT);
-  digitalWrite(12, HIGH);
-  pinMode(13, OUTPUT);     
+  pinMode(RED_LED, OUTPUT);     
+  pinMode(GREEN_LED, OUTPUT);
 }
 
 void loop() {
-  int sensorValue = analogRead(A0);
-  Serial.println(sensorValue);
-  
-  digitalWrite(13, HIGH);   // set the LED on
-  delay(sensorValue);              // wait for a second
-  digitalWrite(13, LOW);    // set the LED off
-  delay(sensorValue);              // wait for a second
+  digitalWrite(RED_LED, HIGH);  
+  digitalWrite(GREEN_LED, LOW);
+  delay(250);
+  digitalWrite(RED_LED, LOW);  
+  digitalWrite(GREEN_LED, HIGH);
+  delay(250);               // wait for a second
 }
