@@ -62,7 +62,7 @@ unsigned int uniform_rand(unsigned int n)
     int x = 0;
 
     do {
-	x = rand();
+        x = rand();
     } while (x >= n * RAND_INV_RANGE(n));
     x /= RAND_INV_RANGE(n);
     return x;
@@ -73,16 +73,16 @@ unsigned int uniform_rand(unsigned int n)
 unsigned char get_cell(unsigned long from[], char x, char y)
 {
     if (x < 0) { 
-      x = FRAME_X - 1; 
+        x = FRAME_X - 1; 
     }
     if (x > FRAME_X - 1) { 
-      x = 0; 
+        x = 0; 
     }
     if (y < 0) { 
-      y = FRAME_Y - 1; 
+        y = FRAME_Y - 1; 
     }
     if (y > FRAME_Y - 1) { 
-      y = 0; 
+        y = 0; 
     }
 
     return ((from[x] & ((unsigned long) 1 << y)) > 0);
@@ -90,7 +90,7 @@ unsigned char get_cell(unsigned long from[], char x, char y)
 
 /////////////////////////////////////////////////////////////////////////
 static inline void set_cell(unsigned long to[], char x, char y, 
-			    unsigned char value)
+                            unsigned char value)
 {
     if (value) {
         to[x] |= (unsigned long) 1 << y;
@@ -123,8 +123,8 @@ unsigned int get_total(unsigned long from[])
     for (unsigned char x = 0; x < FRAME_X; x++) {
         for (unsigned char y = 0; y < FRAME_Y; y++) {
             if (get_cell(from, x, y)) {
-		total++;
-	    }
+                total++;
+            }
         }
     }
 
@@ -177,11 +177,11 @@ void display_temperature(int temp)
 {
     char y = FRAME_Y - 1;
     for (char x = 0; x < FRAME_X; ++x) {
-    	if (temp - 11 >= x) {
-    	    fill_cell(lattice, FRAME_X - x - 1, y);
-    	} else {
-    	    clear_cell(lattice, FRAME_X - x - 1, y);
-    	}
+        if (temp - 11 >= x) {
+            fill_cell(lattice, FRAME_X - x - 1, y);
+        } else {
+            clear_cell(lattice, FRAME_X - x - 1, y);
+        }
     }
 }
 
@@ -191,13 +191,13 @@ static inline void display(unsigned long from[])
     unsigned long longtemp;
 
     for (unsigned char x = 0; x < FRAME_X; x++) { 
-	longtemp = 0;
-	for(unsigned char y = 0; y < FRAME_Y; y++) {  
-	    if (get_cell(from, x, y)) {
-		longtemp |= (unsigned long) 1 << y;
-	    }
-	    frame_buffer[x] = longtemp;
-	}
+        longtemp = 0;
+        for(unsigned char y = 0; y < FRAME_Y; y++) {  
+            if (get_cell(from, x, y)) {
+                longtemp |= (unsigned long) 1 << y;
+            }
+            frame_buffer[x] = longtemp;
+        }
     }
 
     return;
@@ -221,39 +221,39 @@ void display_leds()
 
     k = 0;
     while (k < refresh_num) {
-	k++;
-	j = 0;
+        k++;
+        j = 0;
 
-	while (j < 25) {
-	    if (j == 0) {
-		PORTD = 160;
-	    } else if (j < 16) {
-		PORTD = j;
-	    } else {
-		PORTD = (j - 15) << 4;  
-	    }
-	    dtemp = frame_buffer[j]; 
-	    out4 = dtemp & 255U;
-	    dtemp >>= 8;
-	    out3 = dtemp & 255U;
-	    dtemp >>= 8;
-	    out2 = dtemp & 255U;   
-	    dtemp >>= 8;
-	    out1 = dtemp & 255U;  
+        while (j < 25) {
+            if (j == 0) {
+                PORTD = 160;
+            } else if (j < 16) {
+                PORTD = j;
+            } else {
+                PORTD = (j - 15) << 4;  
+            }
+            dtemp = frame_buffer[j]; 
+            out4 = dtemp & 255U;
+            dtemp >>= 8;
+            out3 = dtemp & 255U;
+            dtemp >>= 8;
+            out2 = dtemp & 255U;   
+            dtemp >>= 8;
+            out1 = dtemp & 255U;  
 
-	    transmit_spi(out1);
-	    transmit_spi(out2);
-	    transmit_spi(out3);
+            transmit_spi(out1);
+            transmit_spi(out2);
+            transmit_spi(out3);
 
-	    PORTD = 0;  // Turn displays off
-	    
-	    transmit_spi(out4);
+            PORTD = 0;  // Turn displays off
+            
+            transmit_spi(out4);
 
-	    PORTB |= _BV(1);              //Latch Pulse 
-	    PORTB &= ~( _BV(1));
+            PORTB |= _BV(1);              //Latch Pulse 
+            PORTB &= ~( _BV(1));
 
-	    j++;
-	}
+            j++;
+        }
     }
 }
 
@@ -263,8 +263,8 @@ void delay_long(unsigned int delay)
     unsigned int delay_count = 0;
 
     while (delay_count <=  delay) { 
-	asm("nop");  
-	delay_count++;
+        asm("nop");  
+        delay_count++;
     } 
 }
 
@@ -272,7 +272,7 @@ void setup()                    // run once, when the sketch starts
 { 
     srand(eeprom_read_word((uint16_t *) 2));
     for (unsigned char temp = 0; temp != 255; temp++) {
-	TCNT0 = rand();
+        TCNT0 = rand();
     }
 
     eeprom_write_word((uint16_t *) 2, rand());
@@ -318,47 +318,47 @@ void loop()                       // run over and over again
     // input_reg_old is now nonzero if there has been a change.
 
     if (input_reg_old) {
-	input_reg_old &= input_reg;  
+        input_reg_old &= input_reg;  
 
         // input_reg_old is now nonzero if the change was to the
         // button-released (not-pulled-down) state. I.e., the bit that was
         // high after the XOR corresponds to a bit that is presently
         // high. The checks that follow will handle MULTIPLE buttons being
         // pressed and unpressed at the same time.
-	if (input_reg_old & 1) {
-	    // b1 "ANY" button is pressed
-	    temperature = 12;
-	    display_temperature(temperature);
-	}  
+        if (input_reg_old & 1) {
+            // b1 "ANY" button is pressed
+            temperature = 12;
+            display_temperature(temperature);
+        }  
 
-	if (input_reg_old & 2)   
-	{
-	    // b2 "left" button is pressed
-	}  
+        if (input_reg_old & 2)   
+            {
+                // b2 "left" button is pressed
+            }  
 
-	if (input_reg_old & 4) {
-	    // b3 "down" button is pressed        
-	    if (--temperature < 11) {
-		temperature = 11;
-	    }
-	    display_temperature(temperature);
-	}                         
+        if (input_reg_old & 4) {
+            // b3 "down" button is pressed        
+            if (--temperature < 11) {
+                temperature = 11;
+            }
+            display_temperature(temperature);
+        }                         
 
-	if (input_reg_old & 8) {
-	    // b4 "up" button is pressed
-	    if (++temperature > 35) {
-		temperature = 35;
-	    }
-	    display_temperature(temperature);
-	}  
+        if (input_reg_old & 8) {
+            // b4 "up" button is pressed
+            if (++temperature > 35) {
+                temperature = 35;
+            }
+            display_temperature(temperature);
+        }  
 
-	if (input_reg_old & 16) {
-	    // b5 "right" button is pressed
-	}
+        if (input_reg_old & 16) {
+            // b5 "right" button is pressed
+        }
 
-	if (input_reg_old & 32) {
-	    // s2 "Off/Select" button is pressed. Toggle in/out of edit mode.
-	}  
+        if (input_reg_old & 32) {
+            // s2 "Off/Select" button is pressed. Toggle in/out of edit mode.
+        }  
     }
 
     input_reg_old = input_reg;
@@ -367,15 +367,15 @@ void loop()                       // run over and over again
     display_leds();
 
     for (char x = 0; x < CELLS_X; x++) { 
-	for (char y = 0; y < CELLS_Y; y++) {  
-	    // Inner loop; should be made quick as possible.
-	    if (uniform_rand(50) < temperature) {
-		fill_cell(lattice, x, y);
-	    } else {
-		clear_cell(lattice, x, y);
-	    }
-	}
-	display_leds();
+        for (char y = 0; y < CELLS_Y; y++) {  
+            // Inner loop; should be made quick as possible.
+            if (uniform_rand(50) < temperature) {
+                fill_cell(lattice, x, y);
+            } else {
+                clear_cell(lattice, x, y);
+            }
+        }
+        display_leds();
     }
 
     display_leds();
