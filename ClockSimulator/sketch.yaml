@@ -1,2 +1,10 @@
+profiles:
+  default:
+    fqbn: lgt8fx:avr:328
+    platforms:
+      - platform: lgt8fx:avr (2.0.7)
+        platform_index_url: https://github.com/dbuezas/lgt8fx/blob/dec4cff044a4d535e46ca787bef62a7c0c8d5d3a/package_lgt8fx_index.json
+    libraries:
+      - TimerOne (1.1.1)
 default_fqbn: lgt8fx:avr:328
 default_port: /dev/ttyUSB0
